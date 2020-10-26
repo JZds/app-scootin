@@ -13,8 +13,8 @@ It does use some 3rd party libraries to resolve some problems faster.
 Documentation is accessible at `localhost:60` after docker load up (Can be used to test all endpoints).
 
 ## Bot
-- Run `php bin/console bot:execute` to execute bot singularly. 
-- Run `php bin/console multi:bot:execute {botCount}` to execute multiple bots by providing bot count. 
+- Run `php bin/console bot:execute` to execute bot singularly 
+- Run `php bin/console multi:bot:execute {botCount}` to execute multiple bots by providing bot count (runs infinitely)
 
 Bot finds any available client that does not have reservation, proceeds to get available scooter, travels for 15s
 whilst updating location every 3s and rest for 5s.
