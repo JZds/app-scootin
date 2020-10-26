@@ -12,5 +12,5 @@ RUN docker-php-ext-install bcmath pdo pdo_mysql && \
 CMD composer install && \
     composer dump-autoload && \
     php bin/console doctrine:schema:update --force && \
-    php bin/console doctrine:fixtures:load && \
+    php bin/console doctrine:fixtures:load --no-interaction && \
     php-fpm
