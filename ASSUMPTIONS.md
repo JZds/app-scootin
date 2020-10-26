@@ -1,0 +1,7 @@
+- Scooter requests are tolerated as client requests
+- Geometry is only by rectangle
+- Country and city is assumed as fixed
+- Client scooter reservations are unlimited
+- Timestamps are only server side
+- Any client can register any other clients reservation
+- Services are more divided

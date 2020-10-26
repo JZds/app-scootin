@@ -1,0 +1,394 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Scootin API"
+  },
+  "host": "localhost:8060",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "Scooters",
+      "description": "Receiving and updating scooters"
+    },
+    {
+      "name": "Reservations",
+      "description": "Reserving scooters for use / Canceling scooter reservations"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/scooters": {
+      "get": {
+        "tags": [
+          "Scooters"
+        ],
+        "summary": "Finds Scooters by status and coordinates",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status values that need to be considered for filter",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "available",
+              "occupied"
+            ],
+            "default": null
+          },
+          {
+            "name": "points[]",
+            "in": "query",
+            "description": "Point values that need to be considered for filter",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "Content-type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/scooters/{uuid}": {
+      "put": {
+        "tags": [
+          "Scooters"
+        ],
+        "summary": "Update scooter location",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "UUID of Scooter",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "Scooter",
+            "in": "body",
+            "description": "Scooter update values",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ScooterRequest"
+            }
+          },
+          {
+            "name": "Content-type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Scooter"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/scooters/{uuid}/reservations": {
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Reserve scooter",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "UUID of Scooter",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "Scooter",
+            "in": "body",
+            "description": "Scooter reservation values",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ScooterReservation"
+            }
+          },
+          {
+            "name": "Content-type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Scooter"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "Invalid state",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/scooters/{uuid}/reservations/revoke": {
+      "put": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Revoke scooter reservation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "UUID of Scooter",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "name": "Scooter",
+            "in": "body",
+            "description": "Scooter reservation values",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ScooterReservation"
+            }
+          },
+          {
+            "name": "Content-type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Scooter"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Access denied",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "Invalid state",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Result": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Scooter"
+          }
+        },
+        "total": {
+          "type": "integer"
+        }
+      }
+    },
+    "Scooter": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "required": true
+        },
+        "longitude": {
+          "type": "number",
+          "required": true
+        },
+        "latitude": {
+          "type": "number",
+          "required": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "required": true
+        }
+      }
+    },
+    "ScooterRequest": {
+      "type": "object",
+      "properties": {
+        "longitude": {
+          "type": "number",
+          "required": true
+        },
+        "latitude": {
+          "type": "number",
+          "required": true
+        }
+      }
+    },
+    "ScooterReservation": {
+      "type": "object",
+      "properties": {
+        "client_uuid": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
+  }
+}

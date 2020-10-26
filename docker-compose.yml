@@ -1,0 +1,62 @@
+version: '3'
+services:
+  php:
+    container_name: php_container
+    image: php:7.4-fpm
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    depends_on:
+      - mysql
+    ports:
+      - 9090:9000
+    volumes:
+      - ./:/app
+      - ~/.composer/composer.json:/home/dockeruser/.composer/composer.json
+      - ~/.composer/.htaccess:/home/dockeruser/.composer/.htaccess
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - application
+
+  nginx:
+    container_name: nginx_container
+    image: nginx:stable-alpine
+    ports:
+      - 8060:80
+    volumes:
+      - ./:/app
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - application
+
+  mysql:
+    container_name: mysql_container
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - application
+
+  swagger:
+    container_name: swagger_ui
+    image: swaggerapi/swagger-ui
+    environment:
+      - API_URL=/swagger.json
+    ports:
+      - 60:8080
+    volumes:
+      - ./swagger.json:/app/swagger.json
+    networks:
+      - application
+
+networks:
+  application:
